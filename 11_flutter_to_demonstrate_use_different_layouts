@@ -177,3 +177,165 @@ class LayoutDemoApp extends StatelessWidget {
 flutter run
 
 flutter build apk --debug
+
+
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(LayoutDemoApp());
+}
+
+class LayoutDemoApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Layout Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: LayoutDemoScreen(),
+    );
+  }
+}
+
+class LayoutDemoScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Flutter Layout Demo'),
+      ),
+      body: ListView(
+        children: [
+          // Column Layout
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              color: Colors.lightBlueAccent,
+              child: Column(
+                children: [
+                  Container(
+                      height: 100,
+                      color: Colors.red,
+                      child: Center(
+                          child: Text('Item 1',
+                              style: TextStyle(color: Colors.white)))),
+                  Container(
+                      height: 100,
+                      color: Colors.green,
+                      child: Center(
+                          child: Text('Item 2',
+                              style: TextStyle(color: Colors.white)))),
+                  Container(
+                      height: 100,
+                      color: Colors.orange,
+                      child: Center(
+                          child: Text('Item 3',
+                              style: TextStyle(color: Colors.white)))),
+                ],
+              ),
+            ),
+          ),
+
+          // Row Layout
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              color: Colors.pinkAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.yellow,
+                      child: Center(
+                          child: Text('A',
+                              style: TextStyle(color: Colors.white)))),
+                  Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.blue,
+                      child: Center(
+                          child: Text('B',
+                              style: TextStyle(color: Colors.white)))),
+                  Container(
+                      width: 80,
+                      height: 80,
+                      color: Colors.purple,
+                      child: Center(
+                          child: Text('C',
+                              style: TextStyle(color: Colors.white)))),
+                ],
+              ),
+            ),
+          ),
+
+          // Stack Layout
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              color: Colors.greenAccent,
+              child: Stack(
+                children: [
+                  Container(width: 150, height: 150, color: Colors.cyan),
+                  Positioned(
+                    top: 50,
+                    left: 50,
+                    child: Container(width: 50, height: 50, color: Colors.red),
+                  ),
+                  Positioned(
+                    top: 100,
+                    left: 100,
+                    child:
+                        Container(width: 50, height: 50, color: Colors.orange),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // GridView Layout
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              color: Colors.amber,
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                children: List.generate(6, (index) {
+                  return Container(
+                    margin: EdgeInsets.all(4.0),
+                    color: index.isEven ? Colors.purple : Colors.teal,
+                    child: Center(
+                        child: Text('Item ${index + 1}',
+                            style: TextStyle(color: Colors.white))),
+                  );
+                }),
+              ),
+            ),
+          ),
+
+          // ListView Layout
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              color: Colors.grey,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.star, color: Colors.blue),
+                    title: Text('List Item ${index + 1}'),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
