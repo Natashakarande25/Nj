@@ -126,3 +126,123 @@ class FullScreenImageView extends StatelessWidget {
 flutter run
 
 flutter build apk --debug
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
+import 'dart:io';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Image Gallery',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: GalleryPage(),
+    );
+  }
+}
+
+class GalleryPage extends StatefulWidget {
+  @override
+  _GalleryPageState createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> {
+  List<File> _images = [];
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _images.add(File(image.path));
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Image Gallery'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add_a_photo),
+            onPressed: _pickImage,
+          ),
+        ],
+      ),
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+        ),
+        itemCount: _images.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => FullScreenImageView(
+                    images: _images,
+                    initialIndex: index,
+                  ),
+                ),
+              );
+            },
+            child: Image.file(
+              _images[index],
+              fit: BoxFit.cover,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class FullScreenImageView extends StatelessWidget {
+  final List<File> images;
+  final int initialIndex;
+
+  FullScreenImageView({required this.images, required this.initialIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Full-Screen Image View'),
+      ),
+      body: PhotoViewGallery.builder(
+        itemCount: images.length,
+        builder: (context, index) {
+          return PhotoViewGalleryPageOptions(
+            imageProvider: FileImage(images[index]),
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: PhotoViewComputedScale.covered,
+          );
+        },
+        scrollPhysics: BouncingScrollPhysics(),
+        backgroundDecoration: BoxDecoration(
+          color: Colors.black,
+        ),
+        pageController: PageController(initialPage: initialIndex),
+      ),
+    );
+  }
+}
