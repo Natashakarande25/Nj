@@ -1,0 +1,67 @@
+Simple-Web-App/
+│── public/
+│   ├── app.js
+│   ├── index.html
+│── server.js
+
+((inside the folder,install
+npm install cors express
+
+run the application 
+nide server.js))
+
+app.js
+var app = angular.module("myApp", []);
+
+app.controller("itemsController", function ($scope, $http) {
+    $http.get("http://localhost:3000/api/items")
+        .then(function (response) {
+            $scope.items = response.data;
+        })
+        .catch(function (error) {
+            console.log("Error: " + error);
+        });
+});
+
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="myApp">
+    <div ng-controller="itemsController">
+        <h1>Items List</h1>
+        <ul>
+            <li ng-repeat="item in items">{{ item.name }}</li>
+        </ul>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
+
+server.js
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+
+const app = express();
+app.use(cors());
+app.use(express.static("public"));
+
+const items = [
+    { id: 1, name: "Item 1" },
+    { id: 2, name: "Item 2" },
+    { id: 3, name: "Item 3" }
+];
+
+app.get("/api/items", (req, res) => {
+    res.json(items);
+});
+
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
+});
